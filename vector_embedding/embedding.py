@@ -20,3 +20,7 @@ def generate_primary_embedding(sentence, takeAverage=False):
 
 def get_embedding():
     return embeddings
+
+# clear the embeddings list at the end of the week
+def clear_embedding():
+    embeddings = []
