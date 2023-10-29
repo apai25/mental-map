@@ -62,23 +62,19 @@ def get_daily_summary(context):
 
 
 def get_weekly_summary(daily_summaries):
-    # list_of_dicts: [{"sentiment": "INSERT_SENTIMENT", "text": "INSERT_TEXT"}]
-    all_sentiments = {}
-    for dict in daily_summaries:
-        all_sentiments[dict["sentiment"]] = dict["text"]
-    
+   
     prompt = f"""
         Your goal is to summarize all of the events given to you about a person's life below.
         Respond in second-person perspective with words like "you" as if you're communicating with the person you're describing.
         Summarize the given information as if it were a diary of entries over the past week. 
-        You will be given a dictionary that maps a person's sentiment to the event that occurred, which represents their diary entries.
-        If the sentiment is "Excitement", "Joy", or "Love", summarize those events first in your response.
-        Lastly, if the sentiment is "Anger", "Anxiety", "Disappointment", "Fear", "Pain", "Sadness", or "Tiredness", summarize those events last.
+        You will be given a list of diary entries after "context: ". Diary entires may vary largely, and some may be negative or positive. 
+        For the final weekly summary, try to highlight the positive aspects of the user's week. Do not spend as much time on negative weeks.
+        For negative events that are very, very negative, make sure to give a positive outlook that would boost the user's mental health.
         Try to make those summaries sound more positive, and spend less time on the negative events.
         Use slightly informal language in your response.
         Respond with no more than 2 sentences per event. I will now provide you with the diary entries thus far.
 
-        Context: {all_sentiments}
+        Context: {daily_summaries}
 
         Please respond to the above context in a way that is compliant with the information about your goal and task.
         """

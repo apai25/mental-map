@@ -35,12 +35,14 @@ def login():
         )
         user_information = cursor.fetchone()
 
+    print(user_information)
     if user_information is None:
         return 'Email or password is incorrect.', 401
 
     if data['password'] != user_information[0][2]:
         return 'Email or password is incorrect.', 401
 
+    print(user_information[0][0])
     return jsonify({'user_id': user_information[0][0]}), 200
 
 @app.route('/register', methods=['POST'])
@@ -149,9 +151,11 @@ def get_entries():
     return jsonify(entry_information), 200
 
 @app.route('/get-weekly-summary', methods=['POST'])
-def get_weekly_entry_summary():
+async def get_weekly_entry_summary():
     data = request.json
     user_id = data['user_id']
+
+    print(user_id)
 
     with conn.cursor() as cursor:
         cursor.execute(
@@ -161,20 +165,25 @@ def get_weekly_entry_summary():
         entries = cursor.fetchone()
     
     if entries is None:
+        print('fuck')
         return 'User does not exist.', 400
     
     monday_date = get_first_day_of_week()
     with conn.cursor() as cursor:
         cursor.execute(
-            "SELECT (entry_id, user_id, entry_date, sentiment, entry_text) FROM diary_entries WHERE user_id = %s AND entry_date >= %s",
+            "SELECT (entry_text) FROM diary_entries WHERE user_id = %s AND entry_date >= %s",
             (user_id, monday_date)
         )
         entries = cursor.fetchall()
-    
-    day_summaries = [{'sentiment': entry[0][3], 'text': entry[0][4]} for entry in entries]
+    print(entries)
+    day_summaries = [entry[0][0] for entry in entries]
     weekly_summary = get_weekly_summary(day_summaries)
+    sentiments = await get_sentiments(weekly_summary)
+    sentiments = [(k, sentiments[k]) for k in sentiments]
+    sentiments.sort(key=lambda x: x[1], reverse=True)
+    sentiments = sentiments[:3]
 
-    return jsonify({'weekly_summary': weekly_summary}), 200
+    return jsonify({'weekly_summary': weekly_summary, 'sentiments': sentiments}), 200
 
 if __name__ == '__main__':
     HOST = 'localhost'
