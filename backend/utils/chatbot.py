@@ -3,7 +3,30 @@ import random
 import os
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
-def get_gpt3_response(prompt):
+def get_chatbot_response(user_input, context):
+    prompt = f"""
+        You are a friend talking to another person. 
+        Use slang language in your response, and text like a college student. Do not urge dangerous actions, and be sympathetic and empathetic whenever possible.
+        Your goal is to essentially act as a friend to the other person, and help them through any problems they may face. 
+        Ask no more than 1 question in your response if the conversation is ending. I will now provide you with the context of the conversation thus far.   
+
+        Context: {context}
+
+        I will now give you the user response following the given context. 
+        Please respond using the information I have given about your role: {user_input}
+        """
+    
+    response = openai.Completion.create(
+        engine="text-davinci-003",  # You can use other models like text-davinci-003
+        prompt=prompt,
+        max_tokens=100,  # Adjust as needed
+        n=1,
+        stop=None,
+        temperature=0.6  # Adjust for desired randomness
+    )
+    return response.choices[0].text.strip()
+
+def get_basic_response(user_input):
     prompt = "You are a friend talking to another person. Use slang language in your response, and text like a college student. Ask no more than 1 question in your response if the conversation is ending. Respond to this message: " + prompt
     response = openai.Completion.create(
         engine="text-davinci-003",  # You can use other models like text-davinci-003
@@ -33,7 +56,7 @@ def run_chatbot():
             print("Exiting...")
             break
 
-        gpt3_response = get_gpt3_response(user_input)
+        gpt3_response = get_basic_response(user_input)
 
         print(f"Chat: {gpt3_response}")
 
