@@ -35,14 +35,12 @@ def login():
         )
         user_information = cursor.fetchone()
 
-    print(user_information)
     if user_information is None:
         return 'Email or password is incorrect.', 401
 
     if data['password'] != user_information[0][2]:
         return 'Email or password is incorrect.', 401
 
-    print(user_information[0][0])
     return jsonify({'user_id': user_information[0][0]}), 200
 
 @app.route('/register', methods=['POST'])
@@ -55,8 +53,6 @@ def register():
     with conn.cursor() as cursor:
         cursor.execute("SELECT user_id FROM user_information WHERE email = %s", (data['email'],))
         existing_user = cursor.fetchone()
-
-    print(existing_user)
 
     if existing_user:
         return "User already registered.", 400
@@ -155,8 +151,6 @@ async def get_weekly_entry_summary():
     data = request.json
     user_id = data['user_id']
 
-    print(user_id)
-
     with conn.cursor() as cursor:
         cursor.execute(
             "SELECT (user_id) FROM user_information WHERE user_id = %s",
@@ -165,7 +159,6 @@ async def get_weekly_entry_summary():
         entries = cursor.fetchone()
     
     if entries is None:
-        print('fuck')
         return 'User does not exist.', 400
     
     monday_date = get_first_day_of_week()
@@ -175,7 +168,6 @@ async def get_weekly_entry_summary():
             (user_id, monday_date)
         )
         entries = cursor.fetchall()
-    print(entries)
     day_summaries = [entry[0][0] for entry in entries]
     weekly_summary = get_weekly_summary(day_summaries)
     sentiments = await get_sentiments(weekly_summary)
