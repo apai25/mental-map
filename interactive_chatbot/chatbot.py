@@ -1,12 +1,15 @@
 import subprocess
+import openai
+import random
+import os
 python_executable = '/usr/local/bin/python3'
 package_names = ['openai']
 for package_name in package_names:
     subprocess.check_call([python_executable, '-m', 'pip', 'install', package_name])
 
-import openai
-import random
 
+
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 def get_gpt3_response(prompt):
     prompt = "You are a friend talking to another person. Use slang language in your response, and text like a college student. Respond to this message: " + prompt
     response = openai.Completion.create(
@@ -22,8 +25,7 @@ def get_gpt3_response(prompt):
 def run_chatbot():
     questions = ["Rose?", "Bud?", "Thorn?"]
 
-    api_key = "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"
-    openai.api_key = api_key
+    openai.api_key = OPENAI_API_KEY
 
     start = True
     while True:
