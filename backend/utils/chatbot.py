@@ -145,10 +145,10 @@ if __name__ == '__main__':
                {"user": "user", "text": "I mean, if she's lesbian, that means she don't want my dick and she want some pussy instead bruh."},
                {"user": "chatbot", "text": "LOL, yeah but that's her preference. You gotta respect that. Catch up with you later?"},
                {"user": "user", "text": "done"}]
-    daily_summary = get_daily_summary(context)
-    print(daily_summary)
-    daily_sentiment = get_daily_sentiment(context)
-    print(daily_sentiment)
+    # daily_summary = get_daily_summary(context)
+    # print(daily_summary)
+    # daily_sentiment = get_daily_sentiment(context)
+    # print(daily_sentiment)
 
 
 # print(get_chatbot_summary([{"sentiment": "positive", "text": "Great job!"},
