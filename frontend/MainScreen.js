@@ -8,6 +8,7 @@ import LoginStackScreen from './screens/login/LoginStackScreen';
 import LoginScreen from './screens/login/LoginScreen';
 import CreateAccountScreen from './screens/login/CreateAccountScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {Connect} from 'react-redux'
 
 
 export default function MainScreen() {

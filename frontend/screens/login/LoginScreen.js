@@ -1,6 +1,9 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet } from 'react-native'
+import axios from 'axios'
+import { View, Image, Text, StyleSheet, Alert } from 'react-native'
 import { TextInput, Button } from 'react-native-paper';
+
+const baseURL = "http://localhost:3000"
 
 const LoginScreen = ({ route, navigation }) => {
 
@@ -9,10 +12,30 @@ const LoginScreen = ({ route, navigation }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const incorrectPasswordAlert = () =>
+    Alert.alert('Incorrect Login Credentials', 'Username or Password is incorrect.', [
+      {
+        text: 'Ok',
+        style: 'cancel',
+      },
+  ]);
 
 
   const login = () => {
-    setLogin(true);
+    axios
+    .post(`${baseURL}/login`, {
+      email: email,
+      password: password
+    })
+    .then((response) => {
+      if (response.status == 200) {
+        setLogin(true)
+        console.log(response)
+      }
+    })
+    .catch((error) => {
+      incorrectPasswordAlert();
+    });
   }
 
   const goToCreateAccount = () => {

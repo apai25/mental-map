@@ -1,18 +1,52 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet } from 'react-native'
+import { View, Image, Text, StyleSheet, Alert } from 'react-native'
 import { TextInput, Button } from 'react-native-paper';
+import axios from 'axios'
 
-const CreateAccountScreen = (props) => {
+const baseURL = "http://localhost:3000"
 
-  const { setLoggedIn } = props;
+const CreateAccountScreen = ({ route, navigation }) => {
+
+  const { setLogin } = route.params;
   
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const accountExistsAlert = () =>
+    Alert.alert('Account Already Exists', 'Account with same username already exists', [
+      {
+        text: 'Ok',
+        style: 'cancel',
+      },
+  ]);
 
+  const unexpectedError = () =>
+    Alert.alert('Unexpected Error', 'Please try again.', [
+      {
+        text: 'Ok',
+        style: 'cancel',
+      },
+  ]);
 
-  const login = () => {
-    setLoggedIn(true);
+  const createAccount = () => {
+    axios
+    .post(`${baseURL}/register`, {
+      email: email,
+      password: password
+    })
+    .then((response) => {
+      if (response.status == 200) {
+        setLogin(true);
+      }
+    })
+    .catch((error) => {
+      console.log(error.code)
+      if (error.response.status == 400) {
+        accountExistsAlert()
+      } else {
+        unexpectedError()
+      }
+    });
   }
 
   return (
@@ -40,7 +74,7 @@ const CreateAccountScreen = (props) => {
         onChangeText={password => setPassword(password)}
         style={styles.textField}
       />
-      <Button mode="outlined" onPress={login} style={styles.submitButton}>
+      <Button mode="outlined" onPress={createAccount} style={styles.submitButton}>
         Create Account
       </Button>
       {/* <View
