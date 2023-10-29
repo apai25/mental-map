@@ -44,5 +44,5 @@ def run_chatbot():
 
         print(f"Chat: {gpt3_response}")
 
-
-run_chatbot()
+if __name__ == '__main__':
+    run_chatbot()
