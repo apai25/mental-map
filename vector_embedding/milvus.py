@@ -1,7 +1,4 @@
-import torch
 import numpy as np
-import requests
-import random
 import http.client
 
 MILVUS_HOST = 'https://in03-e0632cb9ccac3a4.api.gcp-us-west1.zillizcloud.com'
@@ -34,53 +31,28 @@ class milvus:
 
         return None
 
-    # def fetch_specific(id):
-    #     host = MILVUS_HOST + '/v1/vector/query'
-    #     data = [
-    #         {
-    #             f"filter": "id in [{id}]"
-    #         }
-    #     ]
+    def fetch_specific(self, fetch_ids):
+        conn = http.client.HTTPSConnection("in03-e0632cb9ccac3a4.api.gcp-us-west1.zillizcloud.com")
+        payload = "{\"collectionName\":\"mentalmaps\",\"id\":" + str(fetch_ids) + "}"
+        headers = {
+            'Authorization': "Bearer 9a481fbef6077a066e52d63c4186bbfa0a65f742f5e66b05f393b7a25101a6e6fcf879c81d187de14942bea8dd8e7dc5dc6dda62",
+            'Accept': "application/json"
+        }
+        conn.request("POST", "/v1/vector/get", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+        return None
 
-    #     try:
-    #         response = requests.post(host, headers=headers, json=data)
-    #         print("Success")
-    #         return response.data.title_vector
-    #     except requests.exceptions.RequestException as e:
-    #         print("Request error")
-    #         return None
-
-    # def fetch_all():
-    #     host = MILVUS_HOST + '/v1/vector/query'
-    #     valid_ids = [i for i in range(ID)]
-    #     data = [
-    #         {
-    #             f"filter": "id in {valid_ids}"
-    #         }
-    #     ]
-
-    #     try:
-    #         response = requests.post(host, headers=headers, json=data)
-    #         print("Success")
-    #         return response.data.title_vector
-    #     except requests.exceptions.RequestException as e:
-    #         print("Request error")
-    #         return None
-
-    # def delete_all():
-    #     host = MILVUS_HOST + '/v1/vector/delete'
-    #     valid_ids = [i for i in range(ID)]
-    #     data = [
-    #         {
-    #             f"id": "id in {valid_ids}"
-    #         }
-    #     ]
-    #     ID = 0
-
-    #     try:
-    #         response = requests.post(host, headers=headers, json=data)
-    #         print("Success")
-    #         return response.data
-    #     except requests.exceptions.RequestException as e:
-    #         print("Request error")
-    #         return None
+    def delete_specific(self, delete_list_ids):
+        conn = http.client.HTTPSConnection("in03-e0632cb9ccac3a4.api.gcp-us-west1.zillizcloud.com")
+        payload = "{\"collectionName\":\"mentalmaps\",\"id\":" + str(delete_list_ids) + "]}"
+        headers = {
+            'Authorization': "Bearer 9a481fbef6077a066e52d63c4186bbfa0a65f742f5e66b05f393b7a25101a6e6fcf879c81d187de14942bea8dd8e7dc5dc6dda62",
+            'Accept': "application/json"
+        }
+        conn.request("POST", "/v1/vector/delete", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+        return None

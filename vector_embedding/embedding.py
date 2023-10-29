@@ -25,5 +25,4 @@ def get_embedding():
 # clear the embeddings list at the end of the week
 def clear_embedding():
     embeddings = []
-
-generate_primary_embedding("This is a sample sentence.")
+    return None
