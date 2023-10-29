@@ -11,7 +11,7 @@ def get_chatbot_response(context):
         Your goal is to essentially act as a friend to the other person, and help them through any problems they may face. 
         Ask no more than 1 question in your response if the conversation is ending. I will now provide you with the context of the conversation thus far.   
 
-        Context: {context}
+        Context: {formatted_context}
 
         Please respond to the above context in a way that is compliant with the information about your goal and task. 
         """
@@ -35,10 +35,10 @@ def parse_context(context):
             parsed += f'user: {entry["text"]}, '
     return parsed[:-2]
 
-def get_chatbot_summary(list_of_dicts):
+def get_weekly_summary(daily_summaries):
     # list_of_dicts: [{"sentiment": "INSERT_SENTIMENT", "text": "INSERT_TEXT"}]
     all_sentiments = {}
-    for dict in list_of_dicts:
+    for dict in daily_summaries:
         all_sentiments[dict["sentiment"]] = dict["text"]
     
     prompt = f"""
