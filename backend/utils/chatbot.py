@@ -67,6 +67,9 @@ def get_weekly_summary(daily_summaries):
     )
     return response.choices[0].text.strip()
 
+def get_daily_summary(context):
+    pass
+
 def get_basic_response(user_input):
     prompt = "You are a friend talking to another person. Use slang language in your response, and text like a college student. Ask no more than 1 question in your response if the conversation is ending. Respond to this message: " + prompt
     response = openai.Completion.create(
