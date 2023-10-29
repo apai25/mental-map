@@ -1,22 +1,23 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
+import milvus
 
 embeddings = []
 
-def generate_primary_embedding(sentence, takeAverage=False):
+def generate_primary_embedding(sentence):
     tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
     model = AutoModel.from_pretrained("bert-base-uncased")
 
     # Tokenize and obtain the sentence embedding
-    inputs = tokenizer(sentence, return_tensors="pt", padding=True, truncation=True) # pt - PyTorch, tf - Tensorflow, np - Numpy
+    inputs = tokenizer(sentence, return_tensors="pt", padding=False, truncation=True) # pt - PyTorch, tf - Tensorflow, np - Numpy
     outputs = model(**inputs)
-    if takeAverage:
-        sentence_vector = torch.mean(outputs.last_hidden_state, dim=1)
-        embeddings.append(sentence_vector)
-        return sentence_vector
-    else:
-        embeddings.append(outputs.last_hidden_state)
-        return outputs.last_hidden_state
+    sentence_vector = torch.mean(outputs.last_hidden_state, dim=1)
+    embeddings.append(sentence_vector)
+
+    a = milvus.milvus()
+    a.store_embeddings(sentence_vector)
+
+    return sentence_vector
 
 def get_embedding():
     return embeddings
@@ -24,3 +25,4 @@ def get_embedding():
 # clear the embeddings list at the end of the week
 def clear_embedding():
     embeddings = []
+    return None
