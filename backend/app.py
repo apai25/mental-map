@@ -56,6 +56,8 @@ def register():
     global user_id
     data = request.json
 
+    if 'email' not in data or 'password' not in data:
+        return 'Malformed input.', 400
 
     with conn.cursor() as cursor:
         cursor.execute("SELECT user_id FROM user_information WHERE email = %s", (data['email'],))
@@ -77,6 +79,9 @@ def register():
 async def store_entry():
     global entry_id
     data = request.json
+    if 'entry_text' not in data:
+        return 'Malformed input.', 400
+
     sentiment = await get_sentiment(data['entry_text'])
 
     current_date = datetime.now()
