@@ -9,8 +9,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
-conn = psycopg.connect(os.environ['DATABASE_URL'])
-
+# conn = psycopg.connect(os.environ['DATABASE_URL'])
+conn = psycopg.connect("postgresql://apai25:ZqZMx32nohbDmTaTwOqGZQ@mental-map-3658.g95.cockroachlabs.cloud:26257/defaultdb?sslmode=require")
 EMOTIONS = ['Anger', 'Anxiety', 'Disappointment', 'Excitement', 'Fear', 'Joy', 'Love', 'Pain', 'Sadness', 'Tiredness']
 
 @app.route('/get-chat-response', methods=['POST'])
@@ -107,6 +107,7 @@ async def store_entry():
 def get_entries():
     data = request.json
     user_id = data['user_id']
+    formatted_date = data['date']
 
     with conn.cursor() as cursor:
         cursor.execute(
@@ -118,8 +119,6 @@ def get_entries():
     if entries is None:
         return 'User does not exist.', 400
 
-    current_date = datetime.now()
-    formatted_date = current_date.strftime("%Y-%m-%d")
     with conn.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM diary_entries WHERE user_id = %s AND entry_date = %s",
@@ -174,8 +173,36 @@ async def get_weekly_entry_summary():
     sentiments = [(k, sentiments[k]) for k in sentiments]
     sentiments.sort(key=lambda x: x[1], reverse=True)
     sentiments = sentiments[:3]
+    sum_sentiments = sum([sentiment[1] for sentiment in sentiments])
+    sentiments = [(pair[0], pair[1] * (100 / sum_sentiments)) for pair in sentiments]
 
     return jsonify({'weekly_summary': weekly_summary, 'sentiments': sentiments}), 200
+
+@app.route('/get-entry-dates', methods=['POST'])
+def get_entry_dates():
+    data = request.json
+
+    if 'user_id' not in data:
+        return 'Malformed input.', 400
+
+    user_id = data['user_id']
+
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "SELECT (user_id) FROM user_information WHERE user_id = %s",
+            (user_id,)
+        )
+        entries = cursor.fetchone()
+    
+    if entries is None:
+        return 'User does not exist.', 400
+
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT entry_date FROM diary_entries WHERE user_id = %s', (user_id, ))
+        entries = cursor.fetchall()
+    dates = list(set([entry[0] for entry in entries]))
+
+    return dates, 200
 
 if __name__ == '__main__':
     HOST = 'localhost'

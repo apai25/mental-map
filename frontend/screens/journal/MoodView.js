@@ -36,9 +36,9 @@ const MoodView = (props) => {
                         justifyContent: 'center'
                         },
                     ]}>
-                    <Emotion emoji={emojis[sentiments[0].sentiment]} percent={sentiments[0].percent} sentiment={sentiments[0].sentiment}/>
-                    <Emotion emoji={emojis[sentiments[1].sentiment]} percent={sentiments[1].percent} sentiment={sentiments[1].sentiment}/>
-                    <Emotion emoji={emojis[sentiments[2].sentiment]} percent={sentiments[2].percent} sentiment={sentiments[2].sentiment}/>
+                    <Emotion emoji={emojis[sentiments[0][0].toLowerCase()]} percent={sentiments[0][1]} sentiment={sentiments[0][0]}/>
+                    <Emotion emoji={emojis[sentiments[1][0].toLowerCase()]} percent={sentiments[1][1]} sentiment={sentiments[1][0]}/>
+                    <Emotion emoji={emojis[sentiments[2][0].toLowerCase()]} percent={sentiments[2][1]} sentiment={sentiments[2][0]}/>
 {/* 
                     // <Text style={{...styles.text, flex: 1}}>{emojis[sentiments[0].sentiment]}</Text>
                     // <Text style={{...styles.text, flex: 2}}>{emojis[sentiments[1].sentiment]}</Text>

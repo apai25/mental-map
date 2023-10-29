@@ -59,6 +59,7 @@ const LoginScreen = ({ route, navigation }) => {
         value={email}
         onChangeText={email => setEmail(email)}
         style={styles.textField}
+        autoCapitalize='none'
       />
       <TextInput
         mode='outlined'
