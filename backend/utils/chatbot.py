@@ -4,6 +4,7 @@ import os
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 def get_chatbot_response(context):
+    formatted_context = parse_context(context)
     prompt = f"""
         You are a friend talking to another person. 
         Use slang language in your response, and text like a college student. Do not urge dangerous actions, and be sympathetic and empathetic whenever possible.
@@ -25,6 +26,14 @@ def get_chatbot_response(context):
     )
     return response.choices[0].text.strip()
 
+def parse_context(context):
+    parsed = ""
+    for entry in context:
+        if entry['user'] == 'chatbot':
+            parsed += f'you: {entry["text"]},'
+        elif entry['user'] == 'user':
+            parsed += f'user: {entry["text"]}, '
+    return parsed[:-2]
 
 def get_chatbot_summary(list_of_dicts):
     # list_of_dicts: [{"sentiment": "INSERT_SENTIMENT", "text": "INSERT_TEXT"}]
