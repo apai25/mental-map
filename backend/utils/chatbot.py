@@ -44,6 +44,7 @@ def get_daily_summary(context):
         Your goal is to summarize this entire conversation about a person's life below.
         Respond in first-person perspective with words like "I" as if you are the person you're describing.
         Summarize the given information as if it were a diary of entries of the current day. 
+        Do not include your own statements that follow the 'you' tag in your summaries of the conversions.
         You will be given a long string transcript of your conversation where 'you' is what you said and 'user' is what the other person said.
         Use slightly informal language in your summary. I will now provide you with the context of the conversation thus far.
 
