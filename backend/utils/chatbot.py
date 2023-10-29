@@ -50,7 +50,7 @@ def get_weekly_summary(daily_summaries):
         Lastly, if the sentiment is "Anger", "Anxiety", "Disappointment", "Fear", "Pain", "Sadness", or "Tiredness", summarize those events last.
         Try to make those summaries sound more positive, and spend less time on the negative events.
         Use slightly informal language in your response.
-        Respond with no more than 2 sentences per event. I will now provide you with the context of the conversation thus far.
+        Respond with no more than 2 sentences per event. I will now provide you with the diary entries thus far.
 
         Context: {all_sentiments}
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
                     {"sentiment": "Excitement", "text": "I just proposed to my fiancee, and she said yes! I will be getting married to the hottest, sexiest, most attractive white women in New York. This is absolutely fantastic, and my entire family has approved of the marriage, too! I can't wait to be a newly wed, and we have started planning our wedding now."},
                     {"sentiment": "Anxiety", "text": "I have a presentation at my paleontology museum very soon, but I am not ready for it. I have not had enough time to prepare for my presentation yet. My boss will be at this presentation, so if I don't do well, he will fire me. I need to someone figure out how to do this presentation well."},
                     {"sentiment": "Joy", "text": "I just won the Calhacks hackathon for my project about cybersecurity malware detection. This is so amazing, because I will be making a million dollars, and I get direct entry to the Y Combinator startups. I will be able to pursue this project full-time out of undergrad, and I can't wait to work on this project next summer."}]
-    summary = get_chatbot_summary(list_of_dicts=list_of_dicts)
+    summary = get_weekly_summary(list_of_dicts=list_of_dicts)
     print(summary)
 
 # print(get_chatbot_summary([{"sentiment": "positive", "text": "Great job!"},
