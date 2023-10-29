@@ -3,10 +3,10 @@ import torch
 from utils.milvus import Milvus
 
 embeddings = []
-
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModel.from_pretrained("bert-base-uncased")
 def generate_primary_embedding(sentence):
-    tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-    model = AutoModel.from_pretrained("bert-base-uncased")
+
 
     # Tokenize and obtain the sentence embedding
     inputs = tokenizer(sentence, return_tensors="pt", padding=False, truncation=True) # pt - PyTorch, tf - Tensorflow, np - Numpy
