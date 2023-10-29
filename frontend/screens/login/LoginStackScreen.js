@@ -15,9 +15,9 @@ export default function LoginStackScreen(props) {
 
     return (
         // <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Login" component={LoginScreen} initialParams={{ setLogin: setLoggedIn }} />
-                <Stack.Screen name="Create Account" component={CreateAccountScreen} />
+            <Stack.Navigator>
+                <Stack.Screen name="Login" component={LoginScreen} initialParams={{ setLogin: setLoggedIn }} options={{ headerShown: false}}/>
+                <Stack.Screen name="Create Account" component={CreateAccountScreen} initialParams={{ setLogin: setLoggedIn }}/>
             </Stack.Navigator>
         // </NavigationContainer>
     );
