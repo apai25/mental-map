@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from utils.sentiment_classification import get_sentiments
 from utils.chatbot import get_chatbot_response, get_weekly_summary, get_daily_summary
 from utils.date_manipulation import get_first_day_of_week
+from utils.embedding import generate_primary_embedding
 from flask_cors import CORS
 import os
 import psycopg
@@ -101,6 +102,7 @@ async def store_entry():
         )
 
     conn.commit()
+    generate_primary_embedding(entry_text)
     return 'Entry stored.', 200
 
 @app.route('/get-entries', methods=['POST'])

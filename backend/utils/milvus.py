@@ -5,7 +5,7 @@ MILVUS_HOST = 'https://in03-e0632cb9ccac3a4.api.gcp-us-west1.zillizcloud.com'
 MILVUS_PORT = '19530'
 MILVUS_COLLECTION = 'mentalmaps'
 
-class milvus:
+class Milvus:
 
     def __init__(self):
         self.ID = 0

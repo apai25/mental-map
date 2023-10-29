@@ -1,6 +1,6 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
-import milvus
+from utils.milvus import Milvus
 
 embeddings = []
 
@@ -14,7 +14,7 @@ def generate_primary_embedding(sentence):
     sentence_vector = torch.mean(outputs.last_hidden_state, dim=1)
     embeddings.append(sentence_vector)
 
-    a = milvus.milvus()
+    a = Milvus()
     a.store_embeddings(sentence_vector)
 
     return sentence_vector
