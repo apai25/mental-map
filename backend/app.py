@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from utils.sentiment_classification import get_sentiment
-from utils.chatbot import get_chatbot_response
+from utils.chatbot import get_chatbot_response, get_weekly_summary
+from utils.date_manipulation import get_first_day_of_week
 from flask_cors import CORS
 import os
 import psycopg
@@ -73,7 +74,7 @@ def register():
 @app.route('/store-entry', methods=['POST'])
 async def store_entry():
     data = request.json
-    if 'entry_text' not in data:
+    if 'context' not in data:
         return 'Malformed input.', 400
     
     with conn.cursor() as cursor:
@@ -85,7 +86,8 @@ async def store_entry():
     if user_information is None:
         return 'User does not exist.', 400
 
-    sentiment = await get_sentiment(data['entry_text'])
+    entry_text = get_daily_summary(data['context'])
+    sentiment = await get_sentiment(entry_text)
 
     current_date = datetime.now()
     formatted_date = current_date.strftime("%Y-%m-%d")
@@ -94,7 +96,7 @@ async def store_entry():
 
         cursor.execute(
             "INSERT INTO diary_entries (user_id, entry_date, entry_text, sentiment) VALUES (%s, %s, %s, %s)",
-            (data['user_id'], formatted_date, data['entry_text'], sentiment)
+            (data['user_id'], formatted_date, entry_text, sentiment)
         )
 
     conn.commit()
@@ -115,10 +117,12 @@ def get_entries():
     if entries is None:
         return 'User does not exist.', 400
 
+    current_date = datetime.now()
+    formatted_date = current_date.strftime("%Y-%m-%d")
     with conn.cursor() as cursor:
         cursor.execute(
-            "SELECT (entry_id, user_id, entry_date, sentiment, entry_text) FROM diary_entries WHERE user_id = %s",
-            (user_id,)
+            "SELECT (entry_id, user_id, entry_date, sentiment, entry_text) FROM diary_entries WHERE user_id = %s AND entry_date = %s",
+            (user_id, formatted_date)
         )
         entries = cursor.fetchall()
 
@@ -126,6 +130,34 @@ def get_entries():
     entry_information = [{keys[i]: entry[0][i] for i in range(len(keys))} for entry in entries]
 
     return jsonify(entry_information), 200
+
+@app.route('/get-weekly-summary', methods=['POST'])
+def get_weekly_entry_summary():
+    data = request.json
+    user_id = data['user_id']
+
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "SELECT (user_id) FROM user_information WHERE user_id = %s",
+            (user_id,)
+        )
+        entries = cursor.fetchone()
+    
+    if entries is None:
+        return 'User does not exist.', 400
+    
+    monday_date = get_first_day_of_week()
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "SELECT (entry_id, user_id, entry_date, sentiment, entry_text) FROM diary_entries WHERE user_id = %s AND entry_date >= %s",
+            (user_id, monday_date)
+        )
+        entries = cursor.fetchall()
+    
+    day_summaries = [{'sentiment': entry[0][3], 'text': entry[0][4]} for entry in entries]
+    weekly_summary = get_weekly_summary(day_summaries)
+
+    return jsonify({'weekly_summary': weekly_summary}), 200
 
 if __name__ == '__main__':
     HOST = 'localhost'

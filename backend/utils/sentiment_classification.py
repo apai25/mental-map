@@ -5,7 +5,7 @@ from hume.models.config import LanguageConfig
 import os
 
 HUME_CLIENT_KEY = os.environ['HUME_CLIENT_KEY']
-async def get_sentiment(text):
+async def get_sentiments(text):
     client = HumeStreamClient(HUME_CLIENT_KEY)
     config = LanguageConfig()
     emotions_lst = ['Admiration', 'Adoration', 'Aesthetic Appreciation', 'Amusement', 'Anger', 'Annoyance', 'Anxiety', 'Awe', 

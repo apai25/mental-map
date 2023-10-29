@@ -14,7 +14,7 @@ def get_chatbot_response(context):
         Your goal is to essentially act as a friend to the other person, and help them through any problems they may face. 
         Ask no more than 1 question in your response if the conversation is ending. I will now provide you with the context of the conversation thus far.   
 
-        Context: {context}
+        Context: {formatted_context}
 
         Please respond to the above context in a way that is compliant with the information about your goal and task. 
         """
@@ -64,17 +64,10 @@ def get_daily_summary(context):
     return response.choices[0].text.strip()
 
 
-def get_daily_sentiment(context):
-     # context: [{"user": "INSERT_USER", "text": "INSERT_YOUR_TEXT"}, ...] # user = 'chatbot' or 'user'
-    summary = get_daily_summary(context)
-    sentiments = asyncio.run(get_sentiment(summary))
-    return sentiments
-
-
-def get_chatbot_summary(list_of_dicts):
+def get_weekly_summary(daily_summaries):
     # list_of_dicts: [{"sentiment": "INSERT_SENTIMENT", "text": "INSERT_TEXT"}]
     all_sentiments = {}
-    for dict in list_of_dicts:
+    for dict in daily_summaries:
         all_sentiments[dict["sentiment"]] = dict["text"]
     
     prompt = f"""
@@ -86,7 +79,7 @@ def get_chatbot_summary(list_of_dicts):
         Lastly, if the sentiment is "Anger", "Anxiety", "Disappointment", "Fear", "Pain", "Sadness", or "Tiredness", summarize those events last.
         Try to make those summaries sound more positive, and spend less time on the negative events.
         Use slightly informal language in your response.
-        Respond with no more than 2 sentences per event. I will now provide you with the context of the conversation thus far.
+        Respond with no more than 2 sentences per event. I will now provide you with the diary entries thus far.
 
         Context: {all_sentiments}
 
@@ -103,6 +96,8 @@ def get_chatbot_summary(list_of_dicts):
     )
     return response.choices[0].text.strip()
 
+
+# THESE ARE OLD UNUSED FUNCTIONS
 def get_basic_response(user_input):
     prompt = "You are a friend talking to another person. Use slang language in your response, and text like a college student. Ask no more than 1 question in your response if the conversation is ending. Respond to this message: " + user_input
     response = openai.Completion.create(
@@ -117,7 +112,6 @@ def get_basic_response(user_input):
 
 def run_chatbot():
     questions = ["Rose?", "Bud?", "Thorn?"]
-
     openai.api_key = OPENAI_API_KEY
 
     start = True
@@ -134,8 +128,8 @@ def run_chatbot():
             break
 
         gpt3_response = get_basic_response(user_input)
-
         print(f"Chat: {gpt3_response}")
+
 
 # for testing purposes, use list_of_dicts to generate a summary of this week's entries
 if __name__ == '__main__':
@@ -158,6 +152,7 @@ if __name__ == '__main__':
     print(daily_summary)
     daily_sentiment = get_daily_sentiment(context)
     print(daily_sentiment)
+
 
 # print(get_chatbot_summary([{"sentiment": "positive", "text": "Great job!"},
 #  {"sentiment": "negative", "text": "Terrible experience."},
