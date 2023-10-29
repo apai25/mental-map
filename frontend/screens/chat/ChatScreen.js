@@ -20,12 +20,41 @@ const baseURL="http://localhost:3000"
 const ChatScreen = ({navigation, route}) => {
   const { userId } = route.params;
 
-  const [messages, setMessages] = useState([])
+  const user = { id: "user" }
+  const computer = { id: "chatbot" }
+
+  const generateRandomComputerMessage = () => {
+    const questions = [
+      "How has your day been so far?",
+      "Did you have a productive day today?",
+      "What was the highlight of your day?",
+      "Have you faced any challenges today?",
+      "Tell me, how are you feeling today?",
+      "Did you accomplish any of your goals today?",
+      "Is there something interesting that happened in your day?",
+      "How's the weather today in your area?",
+      "What's the best thing that happened to you today?",
+      "Did you learn something new today?",
+    ];
+    const randomIndex = Math.floor(Math.random() * questions.length)
+    const question = questions[randomIndex]
+
+    const startMessage = {
+      author: computer,
+      createdAt: Date.now(),
+      id: uuid.v4(),
+      text: question,
+      type: "text"
+    }
+
+    return startMessage
+  }
+
+  const [messages, setMessages] = useState([generateRandomComputerMessage()])
   const [context, setContext] = useState([]);
   const [threadId, setThreadId] = useState(uuid.v4())
   
-  const user = { id: "user" }
-  const computer = { id: "chatbot" }
+  
 
   const saved = () =>
     Alert.alert('Saved!', 'Logged into your journal.', [
