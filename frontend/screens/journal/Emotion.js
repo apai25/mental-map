@@ -10,14 +10,14 @@ const Emotion = ({ emoji, percent, sentiment }) => {
             rotation={-90}
             size={90}
             width={4}
-            fill={percent}
+            fill={Math.round(percent)}
             tintColor="#B0926A"
             backgroundColor="#F1EFE7">
             {
                 (fill) => (
                 <View> 
                     <Text style={{textAlign: 'center', fontSize: 40}}>{emoji}</Text>
-                    <Text style={{textAlign: 'center', fontSize: 15}}>{percent}%</Text>
+                    <Text style={{textAlign: 'center', fontSize: 15}}>{Math.round(percent)}%</Text>
                 </View>
                 )
             }

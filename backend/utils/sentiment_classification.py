@@ -2,7 +2,7 @@ from hume import HumeStreamClient
 from hume.models.config import LanguageConfig
 import os
 
-HUME_CLIENT_KEY = os.environ['HUME_CLIENT_KEY']
+HUME_CLIENT_KEY = "sa4h1KJloRvXssnhlFfGTldG7QiaYyVrJgWrUNR3y0KWzGA8"
 async def get_sentiments(text):
     client = HumeStreamClient(HUME_CLIENT_KEY)
     config = LanguageConfig()

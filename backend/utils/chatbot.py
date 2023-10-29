@@ -2,7 +2,8 @@ import openai
 import random
 import os
 
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+openai.api_key = OPENAI_API_KEY
 def get_chatbot_response(context):
     formatted_context = parse_context(context)
     prompt = f"""

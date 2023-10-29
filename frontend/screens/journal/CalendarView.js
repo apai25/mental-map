@@ -1,103 +1,74 @@
 import React, { useState, useMemo, useCallback } from "react"
 import { StyleSheet, Text, View } from "react-native"
 import { CalendarList } from "react-native-calendars"
-import testIDs from "../testIDs"
+import axios from 'axios'
 
-const RANGE = 24
-const initialDate = "2022-07-05"
-const nextWeekDate = "2022-07-14"
-const nextMonthDate = "2022-08-05"
+const baseURL = "http://localhost:3000"
 
-const CalendarListScreen = props => {
-  const { horizontalView } = props
-  const [selected, setSelected] = useState(initialDate)
-  const marked = useMemo(() => {
-    return {
-      [nextWeekDate]: {
-        selected: selected === nextWeekDate,
-        selectedTextColor: "#5E60CE",
-        marked: true
-      },
-      [nextMonthDate]: {
-        selected: selected === nextMonthDate,
-        selectedTextColor: "#5E60CE",
-        marked: true
-      },
-      [selected]: {
-        selected: true,
-        disableTouchEvent: true,
-        selectedColor: "#5E60CE",
-        selectedTextColor: "white"
+const CalendarView = (props) => {
+
+    const { userId, navigateToDate } = props
+
+    const [markedDates, setMarkedDates] = React.useState(null);
+
+    const createMarkedDateObject = (dates) => {
+      const markedDatesObj = {}
+      for (var i = 0; i < dates.length; i += 1) {
+        const date = dates[i]
+        markedDatesObj[date] = {marked: true}
       }
-    }
-  }, [selected])
 
-  const onDayPress = useCallback(day => {
-    setSelected(day.dateString)
-  }, [])
+      console.log(markedDatesObj)
+      setMarkedDates(markedDatesObj)
+    }
+
+    React.useEffect(() => {
+        axios
+        .post(`${baseURL}/get-entry-dates`, {
+            user_id: userId
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            createMarkedDateObject(response.data)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+      }, []);
 
   return (
     <CalendarList
-      testID={testIDs.calendarList.CONTAINER}
-      current={initialDate}
-      pastScrollRange={RANGE}
-      futureScrollRange={RANGE}
-      onDayPress={onDayPress}
-      markedDates={marked}
-      renderHeader={!horizontalView ? renderCustomHeader : undefined}
-      calendarHeight={!horizontalView ? 390 : undefined}
-      theme={!horizontalView ? theme : undefined}
-      horizontal={horizontalView}
-      pagingEnabled={horizontalView}
-      staticHeader={horizontalView}
+    style={{borderRadius: 10, marginTop: '3%'}}
+    // Initially visible month. Default = now
+    markedDates={markedDates}
+    // Max amount of months allowed to scroll to the past. Default = 50
+    pastScrollRange={50}
+    // Max amount of months allowed to scroll to the future. Default = 50
+    futureScrollRange={50}
+    // Handler which gets executed on day press. Default = undefined
+    onDayPress={day => {
+        console.log("Pressed", day)
+        if (markedDates[day.dateString]) {
+            console.log("inside")
+            navigateToDate(day.dateString)
+        }
+    }}
+    // Handler which gets executed on day long press. Default = undefined
+    onDayLongPress={day => {
+        console.log('selected day', day);
+    }}
+    // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
+    // Handler which gets executed when visible month changes in calendar. Default = undefined
+    onMonthChange={month => {
+        console.log('month changed', month);
+    }}
+
+    // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
+    firstDay={1}
     />
   )
 }
-
-const theme = {
-  stylesheet: {
-    calendar: {
-      header: {
-        dayHeader: {
-          fontWeight: "600",
-          color: "#48BFE3"
-        }
-      }
-    }
-  },
-  "stylesheet.day.basic": {
-    today: {
-      borderColor: "#48BFE3",
-      borderWidth: 0.8
-    },
-    todayText: {
-      color: "#5390D9",
-      fontWeight: "800"
-    }
-  }
-}
-
-function renderCustomHeader(date) {
-  const header = date.toString("MMMM yyyy")
-  const [month, year] = header.split(" ")
-  const textStyle = {
-    fontSize: 18,
-    fontWeight: "bold",
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: "#5E60CE",
-    paddingRight: 5
-  }
-
-  return (
-    <View style={styles.header}>
-      <Text style={[styles.month, textStyle]}>{`${month}`}</Text>
-      <Text style={[styles.year, textStyle]}>{year}</Text>
-    </View>
-  )
-}
-
-export default CalendarListScreen
 
 const styles = StyleSheet.create({
   header: {
@@ -114,3 +85,5 @@ const styles = StyleSheet.create({
     marginRight: 5
   }
 })
+
+export default CalendarView
