@@ -1,5 +1,3 @@
-import asyncio # must import asyncio to run the actual function
-
 from hume import HumeStreamClient
 from hume.models.config import LanguageConfig
 import os
