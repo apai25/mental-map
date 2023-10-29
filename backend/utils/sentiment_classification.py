@@ -29,6 +29,6 @@ async def get_sentiment(text):
     scores = [emotions_dict[i] for i in emotions_lst]
     IMPORTANT_EMOTIONS = {"Anger": 4, "Anxiety": 6, "Disappointment": 18, "Excitement": 29, "Fear": 30, 
                           "Joy": 35, "Love": 36, "Pain": 38, "Sadness": 43, "Tiredness": 51}
-    return {IMPORTANT_EMOTIONS[i]: scores[IMPORTANT_EMOTIONS[i]] for i in IMPORTANT_EMOTIONS}
+    return {i: scores[IMPORTANT_EMOTIONS[i]] for i in IMPORTANT_EMOTIONS}
 
 # print(asyncio.run(get_sentiment("insert input text here")))
