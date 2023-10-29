@@ -11,7 +11,7 @@ for package_name in package_names:
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 def get_gpt3_response(prompt):
-    prompt = "You are a friend talking to another person. Use slang language in your response, and text like a college student. Respond to this message: " + prompt
+    prompt = "You are a friend talking to another person. Use slang language in your response, and text like a college student. Ask no more than 1 question in your response if the conversation is ending. Respond to this message: " + prompt
     response = openai.Completion.create(
         engine="text-davinci-003",  # You can use other models like text-davinci-003
         prompt=prompt,
