@@ -9,7 +9,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
-# conn = psycopg.connect(os.environ['DATABASE_URL'])
 conn = psycopg.connect("postgresql://apai25:ZqZMx32nohbDmTaTwOqGZQ@mental-map-3658.g95.cockroachlabs.cloud:26257/defaultdb?sslmode=require")
 EMOTIONS = ['Anger', 'Anxiety', 'Disappointment', 'Excitement', 'Fear', 'Joy', 'Love', 'Pain', 'Sadness', 'Tiredness']
 
@@ -22,7 +21,7 @@ def get_chat_response():
     except KeyError:
         return 'Malformed input.', 400
 
-    return chatbot_response, 200
+    return jsonify({'chat_response': chatbot_response}), 200
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -85,6 +84,7 @@ async def store_entry():
             (data['user_id'],)
         )
         user_information = cursor.fetchone()
+
     if user_information is None:
         return 'User does not exist.', 400
 
@@ -96,8 +96,8 @@ async def store_entry():
 
     with conn.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO diary_entries (user_id, entry_date, entry_text, anger, anxiety, disappointment, excitement, fear, joy, love, pain, sadness, tiredness) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (data['user_id'], formatted_date, entry_text, sentiments['Anger'], sentiments['Anxiety'], sentiments['Disappointment'], sentiments['Excitement'], sentiments['Fear'], sentiments['Joy'], sentiments['Love'], sentiments['Pain'], sentiments['Sadness'], sentiments['Tiredness'])
+            "UPSERT INTO diary_entries (entry_id, user_id, entry_date, entry_text, anger, anxiety, disappointment, excitement, fear, joy, love, pain, sadness, tiredness) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (data['entry_id'], data['user_id'], formatted_date, entry_text, sentiments['Anger'], sentiments['Anxiety'], sentiments['Disappointment'], sentiments['Excitement'], sentiments['Fear'], sentiments['Joy'], sentiments['Love'], sentiments['Pain'], sentiments['Sadness'], sentiments['Tiredness'])
         )
 
     conn.commit()
@@ -167,6 +167,10 @@ async def get_weekly_entry_summary():
             (user_id, monday_date)
         )
         entries = cursor.fetchall()
+    
+    if not len(entries):
+        return jsonify({'weekly_summary': 'No entries so far!', 'sentiments': [('Have a', 100), ('good', 100), ('week!', 100)]}), 200
+    
     day_summaries = [entry[0][0] for entry in entries]
     weekly_summary = get_weekly_summary(day_summaries)
     sentiments = await get_sentiments(weekly_summary)

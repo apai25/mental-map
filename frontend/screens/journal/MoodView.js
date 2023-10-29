@@ -17,7 +17,8 @@ const MoodView = (props) => {
         "love": "🥰", 
         "pain": "😖", 
         "sadness": "😔", 
-        "tiredness": "🥱"
+        "tiredness": "🥱",
+        'empty': "👻"
     }
 
 

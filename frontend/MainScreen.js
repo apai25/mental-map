@@ -28,8 +28,8 @@ export default function MainScreen() {
                         marginTop: insets.top
                     }
                 }}>
-                    <Tab.Screen name="Chat" component={ChatScreen} initialParams={{userId: userId}} />
                     <Tab.Screen name="Journal" component={JournalScreen} initialParams={{userId: userId}}  />
+                    <Tab.Screen name="Chat" component={ChatScreen} initialParams={{userId: userId}} />
                 </Tab.Navigator>
             :
                 <LoginStackScreen setLoggedIn={setLoggedIn} setUserId={setUserId}/>

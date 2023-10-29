@@ -24,7 +24,8 @@ const DayView = ({route, navigation}) => {
         "love": "🥰", 
         "pain": "😖", 
         "sadness": "😔", 
-        "tiredness": "🥱"
+        "tiredness": "🥱",
+        "have a": "👻"
     }
 
     // const [dailySentiments, setDailySentiments] = React.useState(null);
@@ -68,7 +69,7 @@ const DayView = ({route, navigation}) => {
                         },
                     ]}>
 
-                    <Emotion emoji={emojis[entry.sentiments[0][0].toLowerCase()]} percent={entry.sentiments[0][1]} sentiment={entry.sentiments[0][0]}/>
+                    <Emotion emoji={emojis[entry.sentiments[0][0].toLowerCase()] ? emojis[entry.sentiments[0][0].toLowerCase()] : "👻"} percent={entry.sentiments[0][1]} sentiment={entry.sentiments[0][0]}/>
                     <Emotion emoji={emojis[entry.sentiments[1][0].toLowerCase()]} percent={entry.sentiments[1][1]} sentiment={entry.sentiments[1][0]}/>
                     <Emotion emoji={emojis[entry.sentiments[2][0].toLowerCase()]} percent={entry.sentiments[2][1]} sentiment={entry.sentiments[2][0]}/>
 
