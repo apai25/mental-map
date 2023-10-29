@@ -37,7 +37,7 @@ const CreateAccountScreen = ({ route, navigation }) => {
     .then((response) => {
       if (response.status == 200) {
         setLogin(true);
-        setUserId(response.data)
+        setUserId(response.data.user_id)
       }
     })
     .catch((error) => {

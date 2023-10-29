@@ -11,7 +11,9 @@ const uuidv4 = () => {
   })
 }
 
-const ChatScreen = () => {
+const ChatScreen = ({navigation, route}) => {
+  const { userId } = route.params;
+
   const [messages, setMessages] = useState([])
   const user = { id: "user" }
   const computer = { id: "chatbot" }

@@ -30,8 +30,8 @@ const LoginScreen = ({ route, navigation }) => {
     .then((response) => {
       if (response.status == 200) {
         setLogin(true)
-        setUserId(response.data)
-        console.log(response)
+        setUserId(response.data.user_id)
+        console.log(response.data.user_id)
       }
     })
     .catch((error) => {

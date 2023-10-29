@@ -18,11 +18,11 @@ export default function MainScreen() {
     const insets = useSafeAreaInsets();
 
     const [loggedIn, setLoggedIn] = useState(false);
-    const [userId, setUserId] = useState("");
+    const [userId, setUserId] = useState(null);
 
     return (
         <NavigationContainer>
-            {loggedIn ?
+            {loggedIn && userId ?
                 <Tab.Navigator screenOptions={{
                     tabBarStyle: {
                         marginTop: insets.top
