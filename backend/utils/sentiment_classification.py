@@ -1,11 +1,5 @@
 import asyncio # must import asyncio to run the actual function
 
-# import subprocess
-# python_executable = '/usr/local/bin/python3'
-# package_names = ['hume', 'hume[stream]', 'websockets']
-# for package_name in package_names:
-#     subprocess.check_call([python_executable, '-m', 'pip', 'install', package_name])
-
 from hume import HumeStreamClient
 from hume.models.config import LanguageConfig
 import os
