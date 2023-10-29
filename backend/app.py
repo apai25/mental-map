@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from utils.sentiment_classification import get_sentiment
+from utils.chatbot import get_chatbot_response
 from flask_cors import CORS
 import os
 import psycopg
@@ -11,6 +12,25 @@ user_id = 1
 app = Flask(__name__)
 CORS(app)
 conn = psycopg.connect(os.environ['DATABASE_URL'])
+
+@app.route('/get-chat-response', methods=['POST'])
+def get_chat_response():
+    data = request.json
+    context = data['context']
+    def parse_context(context):
+        parsed = ""
+        for entry in context:
+            parsed += f"you: {entry['chatbot']}, user: {entry['user']}, "
+        return parsed[:-2] # remove the last comma and space
+    try:
+        formatted_context = parse_context(context)
+    except:
+        return 'Malformed input.', 400
+    chatbot_response = get_chatbot_response(formatted_context)
+
+    return chatbot_response, 200
+
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -24,12 +44,12 @@ def login():
         user_information = cursor.fetchone()
 
     if user_information is None:
-        return 'Email or password is incorrect', 401
+        return 'Email or password is incorrect.', 401
 
     if data['password'] != user_information[0][2]:
-        return 'Email or password is incorrect', 401
+        return 'Email or password is incorrect.', 401
 
-    return 'Login successful', 200
+    return 'Login successful.', 200
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -51,7 +71,7 @@ def register():
         )
     user_id = user_id + 1
     conn.commit()
-    return 'OK', 200
+    return 'User registered.', 200
 
 @app.route('/store-entry', methods=['POST'])
 async def store_entry():
@@ -72,7 +92,7 @@ async def store_entry():
     entry_id = entry_id + 1
 
     conn.commit()
-    return 'OK', 200
+    return 'Entry stored.', 200
 
 @app.route('/get-entries', methods=['POST'])
 def get_entries():

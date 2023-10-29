@@ -3,7 +3,7 @@ import random
 import os
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
-def get_chatbot_response(user_input, context):
+def get_chatbot_response(context):
     prompt = f"""
         You are a friend talking to another person. 
         Use slang language in your response, and text like a college student. Do not urge dangerous actions, and be sympathetic and empathetic whenever possible.
@@ -12,8 +12,7 @@ def get_chatbot_response(user_input, context):
 
         Context: {context}
 
-        I will now give you the user response following the given context. 
-        Please respond using the information I have given about your role: {user_input}
+        Please respond to the above context in a way that is compliant with the information about your goal and task. 
         """
     
     response = openai.Completion.create(
