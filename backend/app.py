@@ -54,6 +54,8 @@ def register():
         cursor.execute("SELECT user_id FROM user_information WHERE email = %s", (data['email'],))
         existing_user = cursor.fetchone()
 
+    print(existing_user)
+
     if existing_user:
         return "User already registered.", 400
 

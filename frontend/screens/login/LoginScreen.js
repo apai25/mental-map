@@ -7,7 +7,7 @@ const baseURL = "http://localhost:3000"
 
 const LoginScreen = ({ route, navigation }) => {
 
-  const { setLogin } = route.params;
+  const { setLogin, setUserId } = route.params;
   
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -30,6 +30,7 @@ const LoginScreen = ({ route, navigation }) => {
     .then((response) => {
       if (response.status == 200) {
         setLogin(true)
+        setUserId(response.data)
         console.log(response)
       }
     })

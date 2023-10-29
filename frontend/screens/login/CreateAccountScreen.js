@@ -7,7 +7,7 @@ const baseURL = "http://localhost:3000"
 
 const CreateAccountScreen = ({ route, navigation }) => {
 
-  const { setLogin } = route.params;
+  const { setLogin, setUserId } = route.params;
   
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -37,6 +37,7 @@ const CreateAccountScreen = ({ route, navigation }) => {
     .then((response) => {
       if (response.status == 200) {
         setLogin(true);
+        setUserId(response.data)
       }
     })
     .catch((error) => {
@@ -45,6 +46,7 @@ const CreateAccountScreen = ({ route, navigation }) => {
         accountExistsAlert()
       } else {
         unexpectedError()
+        console.log(error.response.data)
       }
     });
   }

@@ -8,7 +8,7 @@ import CreateAccountScreen from './CreateAccountScreen';
 
 export default function LoginStackScreen(props) {
 
-    const { navigation, setLoggedIn } = props;
+    const { navigation, setLoggedIn, setUserId} = props;
 
     const Stack = createNativeStackNavigator();
     // const insets = useSafeAreaInsets();
@@ -16,8 +16,8 @@ export default function LoginStackScreen(props) {
     return (
         // <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Login" component={LoginScreen} initialParams={{ setLogin: setLoggedIn }} options={{ headerShown: false}}/>
-                <Stack.Screen name="Create Account" component={CreateAccountScreen} initialParams={{ setLogin: setLoggedIn }}/>
+                <Stack.Screen name="Login" component={LoginScreen} initialParams={{ setLogin: setLoggedIn, setUserId: setUserId}} options={{ headerShown: false}}/>
+                <Stack.Screen name="Create Account" component={CreateAccountScreen} initialParams={{ setLogin: setLoggedIn, setUserId: setUserId }}/>
             </Stack.Navigator>
         // </NavigationContainer>
     );

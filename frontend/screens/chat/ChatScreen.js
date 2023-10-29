@@ -13,13 +13,13 @@ const uuidv4 = () => {
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([])
-  const user = { id: "06c33e8b-e835-4736-80f4-63f44b66666c" }
-  const computer = { id: "4a7f9d12-9c24-4e0f-b0db-88e506acddc7" }
+  const user = { id: "user" }
+  const computer = { id: "chatbot" }
 
   const addMessage = message => {
     setMessages([message, ...messages])
   }
-
+  
   const handleSendPress = message => {
     const textMessage = {
       author: user,
