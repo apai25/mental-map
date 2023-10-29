@@ -1,9 +1,6 @@
 import openai
 import random
 import os
-import asyncio
-
-from sentiment_classification import get_sentiment
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 def get_chatbot_response(context):

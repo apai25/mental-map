@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from utils.sentiment_classification import get_sentiment
-from utils.chatbot import get_chatbot_response, get_weekly_summary
+from utils.sentiment_classification import get_sentiments
+from utils.chatbot import get_chatbot_response, get_weekly_summary, get_daily_summary
 from utils.date_manipulation import get_first_day_of_week
 from flask_cors import CORS
 import os
@@ -16,7 +16,7 @@ def get_chat_response():
     data = request.json
     context = data['context']
     try:
-        chatbot_response = get_chat_response(context)
+        chatbot_response = get_chatbot_response(context)
     except KeyError:
         return 'Malformed input.', 400
 
@@ -87,16 +87,15 @@ async def store_entry():
         return 'User does not exist.', 400
 
     entry_text = get_daily_summary(data['context'])
-    sentiment = await get_sentiment(entry_text)
+    sentiments = await get_sentiments(entry_text)
 
     current_date = datetime.now()
     formatted_date = current_date.strftime("%Y-%m-%d")
 
     with conn.cursor() as cursor:
-
         cursor.execute(
-            "INSERT INTO diary_entries (user_id, entry_date, entry_text, sentiment) VALUES (%s, %s, %s, %s)",
-            (data['user_id'], formatted_date, entry_text, sentiment)
+            "INSERT INTO diary_entries (user_id, entry_date, entry_text, anger, anxiety, disappointment, excitement, fear, joy, love, pain, sadness, tiredness) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (data['user_id'], formatted_date, entry_text, sentiments['anger'], sentiments['anxiety'], sentiments['disappointment'], sentiments['excitement'], sentiments['fear'], sentiments['joy'], sentiments['love'], sentiments['pain'], sentiments['sadness'], sentiments['tiredness'])
         )
 
     conn.commit()
