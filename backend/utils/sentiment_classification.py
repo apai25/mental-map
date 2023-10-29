@@ -27,6 +27,9 @@ async def get_sentiments(text):
     scores = [emotions_dict[i] for i in emotions_lst]
     IMPORTANT_EMOTIONS = {"Anger": 4, "Anxiety": 6, "Disappointment": 18, "Excitement": 29, "Fear": 30, 
                           "Joy": 35, "Love": 36, "Pain": 38, "Sadness": 43, "Tiredness": 51}
-    return {i: scores[IMPORTANT_EMOTIONS[i]] for i in IMPORTANT_EMOTIONS}
+    sentiments = {i: scores[IMPORTANT_EMOTIONS[i]] for i in IMPORTANT_EMOTIONS}
+    updated_sentiments = {i: sentiments[i]/sum(sentiments.values())*100 for i in sentiments}
+    updated_sentiments = dict(sorted(updated_sentiments.items(), key=lambda item: item[1], reverse=True))
+    return updated_sentiments
 
-# print(asyncio.run(get_sentiment("insert input text here")))
+# print(asyncio.run(get_sentiments("i just finished coding my calhacks project after 15 hours!")))
