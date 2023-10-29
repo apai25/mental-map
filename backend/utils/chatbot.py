@@ -1,13 +1,6 @@
-import subprocess
 import openai
 import random
 import os
-python_executable = '/usr/local/bin/python3'
-package_names = ['openai']
-for package_name in package_names:
-    subprocess.check_call([python_executable, '-m', 'pip', 'install', package_name])
-
-
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 def get_gpt3_response(prompt):
