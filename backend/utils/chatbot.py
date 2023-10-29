@@ -145,6 +145,39 @@ if __name__ == '__main__':
                {"user": "user", "text": "I mean, if she's lesbian, that means she don't want my dick and she want some pussy instead bruh."},
                {"user": "chatbot", "text": "LOL, yeah but that's her preference. You gotta respect that. Catch up with you later?"},
                {"user": "user", "text": "done"}]
+    
+    context = [
+        {"user": "user", "text": "I'm really struggling with my studies. I can't seem to focus, and my grades are slipping."},
+        {"user": "chatbot", "text": "I'm sorry to hear that. It's common to have academic challenges. Have you tried setting a study schedule or seeking help from a tutor?"},
+        {"user": "user", "text": "Yeah, I've tried that, but it's just not working for me. I feel overwhelmed."},
+        {"user": "chatbot", "text": "Don't give up. Maybe it's time to talk to your professors or a counselor about your difficulties. They can provide valuable guidance."},
+        {"user": "user", "text": "You're right; I shouldn't give up so easily. Thanks for the advice."},
+        {"user": "chatbot", "text": "You're welcome! Remember, there are always ways to improve. Keep pushing forward!"},
+        {"user": "user", "text": "I will. Thanks for the support."},
+        {"user": "chatbot", "text": "Anytime. Good luck with your studies!"},
+        {"user": "user", "text": "Thanks, I appreciate it."},
+        {"user": "chatbot", "text": "No problem. Let me know if you need more help."},
+        {"user": "user", "text": "Sure thing."},
+        {"user": "chatbot", "text": "Take care!"},
+        {"user": "user", "text": "You too!"},
+        {"user": "chatbot", "text": "Goodbye!"}
+    ]
+
+    context = [
+        {"user": "user", "text": "I'm really excited about my upcoming vacation to Italy. It's been a dream of mine for years."},
+        {"user": "chatbot", "text": "That sounds amazing! Italy is a beautiful country with so much to offer. Do you have an itinerary planned?"},
+        {"user": "user", "text": "Yes, I've planned to visit Rome, Florence, and Venice. I can't wait to try the delicious Italian food."},
+        {"user": "chatbot", "text": "Those are fantastic choices! The food in Italy is a real treat. Don't forget to try the gelato!"},
+        {"user": "user", "text": "I've heard the gelato is a must-try. I'll definitely indulge in it. Have you been to Italy?"},
+        {"user": "chatbot", "text": "No, I haven't been there, but I've heard many great things. I hope you have a fantastic trip and create wonderful memories!"},
+        {"user": "user", "text": "Thank you! I can't wait to go. It's a dream come true."},
+        {"user": "chatbot", "text": "I'm sure it will be an unforgettable experience. Enjoy every moment!"},
+        {"user": "user", "text": "I will. Thanks for your well-wishes!"},
+        {"user": "chatbot", "text": "You're welcome. Safe travels!"}
+    ]
+
+# Add more conversations as needed
+
     # daily_summary = get_daily_summary(context)
     # print(daily_summary)
     # daily_sentiment = get_daily_sentiment(context)

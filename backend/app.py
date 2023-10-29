@@ -11,6 +11,8 @@ app = Flask(__name__)
 CORS(app)
 conn = psycopg.connect(os.environ['DATABASE_URL'])
 
+EMOTIONS = ['Anger', 'Anxiety', 'Disappointment', 'Excitement', 'Fear', 'Joy', 'Love', 'Pain', 'Sadness', 'Tiredness']
+
 @app.route('/get-chat-response', methods=['POST'])
 def get_chat_response():
     data = request.json
@@ -95,7 +97,7 @@ async def store_entry():
     with conn.cursor() as cursor:
         cursor.execute(
             "INSERT INTO diary_entries (user_id, entry_date, entry_text, anger, anxiety, disappointment, excitement, fear, joy, love, pain, sadness, tiredness) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (data['user_id'], formatted_date, entry_text, sentiments['anger'], sentiments['anxiety'], sentiments['disappointment'], sentiments['excitement'], sentiments['fear'], sentiments['joy'], sentiments['love'], sentiments['pain'], sentiments['sadness'], sentiments['tiredness'])
+            (data['user_id'], formatted_date, entry_text, sentiments['Anger'], sentiments['Anxiety'], sentiments['Disappointment'], sentiments['Excitement'], sentiments['Fear'], sentiments['Joy'], sentiments['Love'], sentiments['Pain'], sentiments['Sadness'], sentiments['Tiredness'])
         )
 
     conn.commit()
@@ -120,13 +122,27 @@ def get_entries():
     formatted_date = current_date.strftime("%Y-%m-%d")
     with conn.cursor() as cursor:
         cursor.execute(
-            "SELECT (entry_id, user_id, entry_date, sentiment, entry_text) FROM diary_entries WHERE user_id = %s AND entry_date = %s",
+            "SELECT * FROM diary_entries WHERE user_id = %s AND entry_date = %s",
             (user_id, formatted_date)
         )
         entries = cursor.fetchall()
-
-    keys = ['entry_id', 'user_id', 'entry_date', 'sentiment', 'entry_text']
-    entry_information = [{keys[i]: entry[0][i] for i in range(len(keys))} for entry in entries]
+    
+    entry_information = []
+    for entry in entries:
+        emotion_vals = [(EMOTIONS[i], entry[i + 4]) for i in range(len(EMOTIONS))]
+        emotion_vals.sort(key=lambda x: x[1], reverse=True)
+        emotion_vals = emotion_vals[:3]
+        
+        sum_vals = sum([val[1] for val in emotion_vals])
+        emotion_vals = [(val[0], val[1] * (100 / sum_vals)) for val in emotion_vals]
+        
+        entry_information.append({
+            'entry_id': entry[0],
+            'user_id': entry[1],
+            'entry_date': entry[2],
+            'entry_text': entry[3],
+            'sentiments': emotion_vals,
+        })
 
     return jsonify(entry_information), 200
 
